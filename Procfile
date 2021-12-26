@@ -1,1 +1,1 @@
-web /bin/sh -c \"startup.sh\"
+web: sh startup.sh
