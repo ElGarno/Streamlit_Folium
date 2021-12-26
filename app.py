@@ -9,7 +9,7 @@ def select_excercise():
     :return:
     """
     dict_excercises = {
-        'Introduct. to FAFFI DS with Python - Part 1': itdsp1,
+        'Introduct. to DS with Python - Part 1': itdsp1,
         'Introduct. to DS with Python - Part 2': itdsp2
     }
     st.header("My excercises")
