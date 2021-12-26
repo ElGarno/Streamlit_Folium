@@ -1,1 +1,0 @@
-web: sh create_config.sh && streamlit run streamlit_folium_companies.py
