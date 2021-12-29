@@ -4,6 +4,7 @@ import json
 # convert an address into latitude and longitude values
 import requests
 import folium
+from folium import plugins
 import streamlit as st
 from streamlit_folium import folium_static
 import haversine as hs
@@ -26,6 +27,9 @@ def run_app():
     map_companies_bavaria = folium.Map([49.9, 9.2], tiles=add_select, zoom_start=9)
     # design for the app
     st.title('Map of Companies in central Germany')
+    # cluster markers?
+    chk_show_clusters = st.sidebar.radio("Do you want to cluster Markers",
+                                         ('Yes', 'No'))
     # get sub df from radio buttons for employees
     feature = 'Mitarbeiter'
     # sub_df = get_sub_df_by_radioselect(df_preprocessed, feature)
@@ -48,7 +52,7 @@ def run_app():
         sub_df_r = show_companies_radius(sub_df_brutto)
     else:
         sub_df_r = sub_df_brutto
-    feature_group = set_markers(sub_df_r)
+    feature_group = set_markers(sub_df_r, chk_show_clusters, map_companies_bavaria)
     map_companies_bavaria.add_child(feature_group)
     # folium.Marker([49.9, 9.2], popup=popup).add_to(map_companies_bavaria)
     folium_static(map_companies_bavaria)
@@ -128,7 +132,16 @@ def get_sub_df_by_radioselect(df, feature):
     return sub_df
 
 
-def set_markers(df):
+def set_markers(df, chk_show_clusters, map_companies_bavaria):
+    """
+
+    :param df:
+    :param chk_show_clusters:
+    :param map_companies_bavaria:
+    :return:
+    """
+    if chk_show_clusters == 'Yes':
+        company_clusters = plugins.MarkerCluster().add_to(map_companies_bavaria)
     feature_group = folium.FeatureGroup("Locations")
 
     for lat, lng, name, ma, brutto in zip(list(df['Latitude']), list(df['Longitude']),
