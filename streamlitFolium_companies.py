@@ -139,7 +139,9 @@ def set_markers(df, chk_show_clusters, map_companies_bavaria):
     :return:
     """
     company_symbol = "img/company_symbol.png"
-    if chk_show_clusters == 'Yes':
+    company_clusters = None
+    feature_group = None
+    if chk_show_clusters:
         company_clusters = plugins.MarkerCluster().add_to(map_companies_bavaria)
     else:
         feature_group = folium.FeatureGroup("Locations")
@@ -161,7 +163,7 @@ def set_markers(df, chk_show_clusters, map_companies_bavaria):
 
         popup_constructed = folium.Popup(iframe,
                                          max_width=200)
-        if chk_show_clusters == "Yes":
+        if chk_show_clusters:
             custom_marker = folium.CustomIcon(company_symbol, icon_size=(35, 35), popup_anchor=(0, -22))
             folium.Marker(
                 location=[lat, lng],
