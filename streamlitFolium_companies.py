@@ -52,8 +52,7 @@ def run_app():
         sub_df_r = show_companies_radius(sub_df_brutto)
     else:
         sub_df_r = sub_df_brutto
-    feature_group = set_markers(sub_df_r, chk_show_clusters, map_companies_bavaria)
-    map_companies_bavaria.add_child(feature_group)
+    map_companies_bavaria = set_markers(sub_df_r, chk_show_clusters, map_companies_bavaria)
     # folium.Marker([49.9, 9.2], popup=popup).add_to(map_companies_bavaria)
     folium_static(map_companies_bavaria)
 
@@ -140,9 +139,11 @@ def set_markers(df, chk_show_clusters, map_companies_bavaria):
     :param map_companies_bavaria:
     :return:
     """
+    company_symbol = "img/company_symbol.png"
     if chk_show_clusters == 'Yes':
         company_clusters = plugins.MarkerCluster().add_to(map_companies_bavaria)
-    feature_group = folium.FeatureGroup("Locations")
+    else:
+        feature_group = folium.FeatureGroup("Locations")
 
     for lat, lng, name, ma, brutto in zip(list(df['Latitude']), list(df['Longitude']),
                                           list(df['Unternehmen']), list(df['Mitarbeiter']),
@@ -161,8 +162,24 @@ def set_markers(df, chk_show_clusters, map_companies_bavaria):
 
         popup_constructed = folium.Popup(iframe,
                                          max_width=200)
-        feature_group.add_child(folium.Marker(location=[lat, lng], popup=popup_constructed))
-    return feature_group
+        if chk_show_clusters == "Yes":
+            custom_marker = folium.CustomIcon(company_symbol, icon_size=(35, 35), popup_anchor=(0, -22))
+            folium.Marker(
+                location=[lat, lng],
+                icon=custom_marker,
+                popup=popup_constructed,
+            ).add_to(company_clusters)
+        else:
+            custom_marker = folium.CustomIcon(company_symbol, icon_size=(25, 25), popup_anchor=(0, -22))
+            feature_group.add_child(
+                folium.Marker(
+                    location=[lat, lng],
+                    icon=custom_marker,
+                    popup=popup_constructed,
+                )
+            )
+            map_companies_bavaria.add_child(feature_group)
+    return map_companies_bavaria
 
 
 @st.cache
