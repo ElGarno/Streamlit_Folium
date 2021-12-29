@@ -28,8 +28,7 @@ def run_app():
     # design for the app
     st.title('Map of Companies in central Germany')
     # cluster markers?
-    chk_show_clusters = st.sidebar.radio("Do you want to cluster Markers",
-                                         ('Yes', 'No'))
+    chk_show_clusters = st.sidebar.checkbox("Cluster Markers?", key="chk_cluster_markers")
     # get sub df from radio buttons for employees
     feature = 'Mitarbeiter'
     # sub_df = get_sub_df_by_radioselect(df_preprocessed, feature)
